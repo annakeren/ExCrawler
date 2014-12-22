@@ -20,12 +20,3 @@ parseTitles ('<':'t':'i':'t':'l':'e':'>':xs) = ("" ++ text) : (parseTitles rest)
     where (text, rest) = break space xs
           space c = elem c ['<']
 parseTitles (_:xs) = parseTitles xs
-
-
-
---fixLink :: String -> String
---fixLink ("") = ""
---fixLink ("&apos") = "'"
---fixLink ("&quot") = "\""
---fixLink ("&amp") = "&"
---fixLink (s) = fixLink (take 4 s) ++ fixLink (drop 4 s)
