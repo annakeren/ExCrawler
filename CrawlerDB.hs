@@ -59,15 +59,15 @@ printURLs :: IO ()
 printURLs = do urls <- getURLs
                mapM_ print urls
 
-printQueryAt :: String -> IO ()
-printQueryAt time = do 
-				 urls1 <- getURLsAt time
+printQueryAt :: String -> String -> IO ()
+printQueryAt timeFrom timeTo = do 
+				 urls1 <- getURLsAt timeFrom timeTo
 				 mapM_ print urls1
 
-getURLsAt :: String -> IO [URL]
-getURLsAt time = do 
+getURLsAt :: String -> String-> IO [URL]
+getURLsAt timeFrom timeTo= do 
 				conn <- connectSqlite3 "urls.db"
-				res <- quickQuery' conn "SELECT id FROM dateQuery WHERE  timeStamp<?" [toSql time]
+				res <- quickQuery' conn "SELECT id FROM dateQuery WHERE  timeStamp>? and timeStamp<?" [(toSql timeFrom), (toSql timeTo)]
 				selectMany res
 				return $ map fromSql (map head res)        
 
@@ -81,7 +81,7 @@ selectSingle :: [SqlValue] ->IO()
 selectSingle [] = return ()
 selectSingle x =  do 
 		conn <- connectSqlite3 "urls.db"
-		stmt <- prepare conn "SELECT * FROM linksTitles WHERE  id_parent=?" 
+		stmt <- prepare conn "SELECT query, titles, links FROM linksTitles WHERE  id_parent=?" 
 		execute stmt x
 		results <- fetchAllRowsAL stmt
 		mapM_ print results

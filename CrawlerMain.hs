@@ -1,7 +1,6 @@
 import CrawlerDB
 import CrawlerHTTP
 import CrawlerParser
-import CrawlerHelper
 import System.Environment
 import System.IO
 import Debug.Trace
@@ -11,7 +10,7 @@ main = do args <- getArgs
           case args of
              ["create"] -> createDB	
              ["saved"] -> printURLs		
-             ["savedAt", time] -> printQueryAt time
+             ["savedAt", timeFrom, timeTo] -> printQueryAt timeFrom timeTo
              ["crawl", query] ->
              	do 
              	
@@ -27,17 +26,15 @@ main = do args <- getArgs
              	   let links = parseLinks newsRSS
              	   let titles = parseTitles newsRSS
              	   
+             	   -- first two lines are redundtant
              	   storeLinksMany query (drop 2 links) (drop 2 titles)
-             	   
-             	   --print (drop 2 links)-- the first two links are redundant
-             	   --print (drop 2 titles)-- the first two titles are redundant
-             	   --storeURLs urls
+             	 
              _ -> syntaxError
 
 syntaxError = putStrLn 
   "Usage: Crawler command [args]\n\
   \\n\
   \create           Create database all table for urls.db\n\
-  \saved            List urls on database\n\
-  \savedAt time     List urls on database according to time\n\
+  \saved            List all queries made from database\n\
+  \savedAt timeFrom timeTo     List queries made from database that were made between timestamps, timestamp format YYYY-MM-DD HH:MM:SS\n\
   \crawl url        Gather urls and store in database with time stamp of the made query\n"
