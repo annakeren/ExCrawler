@@ -4,7 +4,7 @@ import System.Locale (defaultTimeLocale)
 import Data.Time (UTCTime)
 import Data.Time.Format (readTime)
 
---replaces space with %20
+--Replaces space with %20
 uriEscapeSpaces :: String -> String
 uriEscapeSpaces uri = substitute uri " " "%20"
 
@@ -23,6 +23,6 @@ charToString :: Char -> String
 charToString c = [c]				
 
 
---timestamp validation function
+--Validates timestamp validation format
 readHMS :: String -> UTCTime
 readHMS = readTime defaultTimeLocale "%Y-%M-%d %H:%M:%S"
